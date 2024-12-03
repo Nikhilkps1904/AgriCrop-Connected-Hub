@@ -81,10 +81,6 @@ const Login = ({ contract, onLogin, username, setUsername, existingUser, setExis
             }
 
             <button className="login-button" onClick={connectWallet}>Connect Wallet</button>
-
-            <footer className="login-footer">
-                By Gowrav,Sagar,Muddaveere gowda and Veeresh
-            </footer>
         </div>
     );
 };
