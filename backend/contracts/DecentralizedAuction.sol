@@ -54,7 +54,7 @@ contract DecentralizedAuction {
         return users[_userAddress];
     }
 
-    function addItem(string memory name, string memory imageUrl, uint minBid, uint buyoutPrice, uint /*biddingTime*/) public {
+    function addItem(string memory name, string memory imageUrl, uint minBid, uint buyoutPrice, uint biddingTime) public {
         //uint auctionEndTime = block.timestamp + biddingTime;
         items.push(Item({
             id: items.length,
