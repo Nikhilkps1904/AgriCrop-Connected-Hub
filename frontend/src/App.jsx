@@ -59,7 +59,7 @@ function App() {
         //let _userItems = await contractInstance.methods.getAllUserItems().call()
 
         // console.log(walletAddress);
-        let _userItems = items.filter(x => x.seller === walletAddress);
+        let _userItems = items.filter(x => x.seller == walletAddress);
 
         // console.log("_userItems")
         // console.log(_userItems);
