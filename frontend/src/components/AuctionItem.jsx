@@ -39,7 +39,7 @@ function AuctionItem({ item, contract, accounts, web3, walletAddress }) {
       
       <p className='status-active'>{isExpired ? "EXPIRED" : "ACTIVE"}</p>
       {
-        (item.seller != walletAddress) &&
+        (item.seller !== walletAddress) &&
         <>
           <button className="bid-button" onClick={() => placeBid(item.id)} disabled = {isExpired}>Place Bid</button>
           <button className="buyout-button" onClick={() => buyout(item.id)} disabled = {isExpired}>Buy Now</button>
