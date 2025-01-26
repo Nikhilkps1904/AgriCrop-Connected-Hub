@@ -1,5 +1,5 @@
 
-# Decentralized Auction House
+# AgriCrop Connected Hub
 A decentralized auction platform developed using Solidity for smart contracts and React.js for the frontend interface.
 
 ## Features
