@@ -66,7 +66,7 @@ const Login = ({ contract, onLogin, username, setUsername, existingUser, setExis
     return (
         <div className="login-container">
             <header className="login-header">
-                Welcome to Decentralized Auction House
+                Welcome to AgriCrop Connected Hub
             </header>
             {/* TODO: Add check for empty username */}
             { !existingUser ?  
@@ -83,7 +83,7 @@ const Login = ({ contract, onLogin, username, setUsername, existingUser, setExis
             <button className="login-button" onClick={connectWallet}>Connect Wallet</button>
 
             <footer className="login-footer">
-                By Gowrav,Sagar,Muddaveere gowda and Veeresh
+                By Aishwarya I,Banakar Sangeetha,Nikhil K P S and SaiTeja
             </footer>
         </div>
     );

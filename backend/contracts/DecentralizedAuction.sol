@@ -32,20 +32,14 @@ contract DecentralizedAuction {
 
     constructor() {
         // Initialize items array with default values
-        for (uint i = 0; i < 10; i++) {
-            items.push(Item({
-                id: i,
-                seller: payable(address(0)),
-                name: "",
-                imageUrl: "",
-                minBid: 0,
-                buyoutPrice: 0,
-                auctionEndTime: 0,
-                highestBidder: address(0),
-                highestBid: 0,
-                ended: false
-            }));
-        }
+         addItem("Wheat", "https://www.reddit.com/r/TwinTowersInPhotos/comments/u9zusc/more_wheat_field_images_1982/", 1 ether, 5 ether, 180 minutes);
+         addItem("Ragi", "https://th.bing.com/th/id/OIP.tKNQhH0mW7oF0wr0JLjFYwHaFE?w=222&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7", 2 ether, 7 ether, 180 minutes);
+         addItem("Jowar", "https://multiwood.com.pk/cdn/shop/products/Picsart_22-10-23_03-53-33-812_1000x1000.jpg?v=1666479726", 3 ether, 10 ether, 180 minutes);
+         addItem("Maize", "https://www.swordsantiqueweapons.com/images/s2331b.jpg", 3 ether, 10 ether, 1 minutes);
+         addItem("Cocunut", "https://www.hemswell-antiques.com/uploads/media/news/0001/95/thumb_94739_news_wide.jpeg", 3 ether, 10 ether, 3 minutes);
+         addItem("Cotton", "https://www.007.com/wp-content/uploads/2022/08/LCC-LS.jpg", 3 ether, 10 ether, 5 minutes);
+         addItem("Paddy", "https://unsplash.com/photos/brown-grains-on-selective-focus-photography-w-iVGVdZvt4", 3 ether, 10 ether, 5 minutes);
+         addItem("Areca Nut", "https://i.pcmag.com/imagery/lineupitems/06sRck1AimbfOxWwRYvEBqX.fit_lim.size_1050x578.v1569508748.jpg", 3 ether, 10 ether, 5 minutes);
     }
 
     function registerUser(string memory _username) public {
