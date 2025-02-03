@@ -18,7 +18,7 @@ const NavBar = ({ username, walletAddress, openUserAuctions, /*withdrawRefunds*/
                 </button>
             </div> */}
             <div className="title-bar">
-                <h1> <span className="green">AgriShop</span> Auction House</h1>
+                <h1> <span className="green">AgriCrop</span> Connected House</h1>
                
             </div>
             <div className="user-info">

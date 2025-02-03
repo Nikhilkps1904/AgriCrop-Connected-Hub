@@ -26033,12 +26033,12 @@
         }
       },
       "links": {},
-      "address": "0x5983AdDf68e3951d3b6EE93592D5B5D6d64cDCbB",
-      "transactionHash": "0x5bd608c05b72f276570ad1e3039a9dbb912459b21a0777c900717c0dea8d513a"
+      "address": "0xEc2eAE985276D681a23996Fa4B5a02a9f5eFF162",
+      "transactionHash": "0x869c2779836a42e070e78c685acdfe2b088031bdbf54f834465dca206b70bef3"
     }
   },
   "schemaVersion": "3.4.16",
-  "updatedAt": "2025-02-03T16:11:49.566Z",
+  "updatedAt": "2025-02-03T16:32:05.356Z",
   "networkType": "ethereum",
   "devdoc": {
     "kind": "dev",
