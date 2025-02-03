@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.19;
 
 contract DecentralizedAuction {
     struct Item {
@@ -9,7 +9,7 @@ contract DecentralizedAuction {
         string imageUrl;
         uint minBid;
         uint buyoutPrice;
-        //uint auctionEndTime;
+        uint auctionEndTime;
         address highestBidder;
         uint highestBid;
         bool ended;
@@ -25,21 +25,27 @@ contract DecentralizedAuction {
     mapping(address => bool) public registered;
 
     event UserRegistered(address userAddress, string username);
-    //event AuctionCreated(uint itemId, string name, uint minBid, uint buyoutPrice, uint auctionEndTime);
-    event AuctionCreated(uint itemId, string name, uint minBid, uint buyoutPrice);
+    event AuctionCreated(uint itemId, string name, uint minBid, uint buyoutPrice, uint auctionEndTime);
     event HighestBidIncreased(uint itemId, address bidder, uint amount);
     event AuctionEnded(uint itemId, address winner, uint amount);
     event ItemBoughtOut(uint itemId, address buyer, uint amount);
-    
+
     constructor() {
-        // addItem("Wheat", "https://www.reddit.com/r/TwinTowersInPhotos/comments/u9zusc/more_wheat_field_images_1982/", 1 ether, 5 ether, 180 minutes);
-        // addItem("Ragi", "https://th.bing.com/th/id/OIP.tKNQhH0mW7oF0wr0JLjFYwHaFE?w=222&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7", 2 ether, 7 ether, 180 minutes);
-        // addItem("Jowar", "https://multiwood.com.pk/cdn/shop/products/Picsart_22-10-23_03-53-33-812_1000x1000.jpg?v=1666479726", 3 ether, 10 ether, 180 minutes);
-        // addItem("Maize", "https://www.swordsantiqueweapons.com/images/s2331b.jpg", 3 ether, 10 ether, 1 minutes);
-        // addItem("Cocunut", "https://www.hemswell-antiques.com/uploads/media/news/0001/95/thumb_94739_news_wide.jpeg", 3 ether, 10 ether, 3 minutes);
-        // addItem("Cotton", "https://www.007.com/wp-content/uploads/2022/08/LCC-LS.jpg", 3 ether, 10 ether, 5 minutes);
-        // addItem("Paddy", "https://unsplash.com/photos/brown-grains-on-selective-focus-photography-w-iVGVdZvt4", 3 ether, 10 ether, 5 minutes);
-        // addItem("Areca Nut", "https://i.pcmag.com/imagery/lineupitems/06sRck1AimbfOxWwRYvEBqX.fit_lim.size_1050x578.v1569508748.jpg", 3 ether, 10 ether, 5 minutes);
+        // Initialize items array with default values
+        for (uint i = 0; i < 10; i++) {
+            items.push(Item({
+                id: i,
+                seller: payable(address(0)),
+                name: "",
+                imageUrl: "",
+                minBid: 0,
+                buyoutPrice: 0,
+                auctionEndTime: 0,
+                highestBidder: address(0),
+                highestBid: 0,
+                ended: false
+            }));
+        }
     }
 
     function registerUser(string memory _username) public {
@@ -55,7 +61,7 @@ contract DecentralizedAuction {
     }
 
     function addItem(string memory name, string memory imageUrl, uint minBid, uint buyoutPrice, uint biddingTime) public {
-        //uint auctionEndTime = block.timestamp + biddingTime;
+        uint auctionEndTime = block.timestamp + biddingTime;
         items.push(Item({
             id: items.length,
             seller: payable(msg.sender),
@@ -63,19 +69,19 @@ contract DecentralizedAuction {
             imageUrl: imageUrl,
             minBid: minBid,
             buyoutPrice: buyoutPrice,
-            //auctionEndTime: auctionEndTime,
+            auctionEndTime: auctionEndTime,
             highestBidder: address(0),
             highestBid: 0,
             ended: false
         }));
-        //emit AuctionCreated(items.length - 1, name, minBid, buyoutPrice, auctionEndTime);
-        emit AuctionCreated(items.length - 1, name, minBid, buyoutPrice);
+        emit AuctionCreated(items.length - 1, name, minBid, buyoutPrice, auctionEndTime);
     }
 
     function bid(uint itemId) public payable {
         require(itemId < items.length, "Invalid Item ID");
         Item storage item = items[itemId];
         require(!item.ended, "Auction already ended");
+        require(block.timestamp <= item.auctionEndTime, "Auction already ended");
         require(item.seller != msg.sender, "You cannot bid on your own auction");
         require(msg.value >= item.minBid, "Bid must be greater than or equal to minimum bid");
         require(msg.value > item.highestBid, "There already is a higher bid");
@@ -94,13 +100,12 @@ contract DecentralizedAuction {
         emit HighestBidIncreased(itemId, msg.sender, msg.value);
     }
 
-
     function buyout(uint itemId) public payable {
         require(itemId < items.length, "Invalid Item ID");
         Item storage item = items[itemId];
         require(!items[itemId].ended, "Auction already ended.");
         require(msg.value == item.buyoutPrice, "Buyout price not met.");
-        
+
         item.ended = true;
 
         if (item.highestBidder != address(0)) {
@@ -113,10 +118,10 @@ contract DecentralizedAuction {
         emit ItemBoughtOut(itemId, msg.sender, msg.value);
     }
 
-
     function endAuction(uint itemId) internal {
         Item storage item = items[itemId];
         require(!item.ended, "Auction end has already been called");
+        require(block.timestamp >= item.auctionEndTime, "Auction not yet ended");
 
         item.ended = true;
 
@@ -126,8 +131,6 @@ contract DecentralizedAuction {
         emit AuctionEnded(itemId, item.highestBidder, item.highestBid);
     }
 
-
-    // Function to manually end the auction
     function manualEndAuction(uint itemId) public {
         require(itemId < items.length, "Invalid Item ID");
         Item storage item = items[itemId];
@@ -136,7 +139,6 @@ contract DecentralizedAuction {
 
         endAuction(itemId);
     }
-
 
     function itemsCount() public view returns (uint) {
         return items.length;
