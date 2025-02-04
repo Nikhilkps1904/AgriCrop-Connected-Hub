@@ -30,18 +30,59 @@ contract DecentralizedAuction {
     event AuctionEnded(uint itemId, address winner, uint amount);
     event ItemBoughtOut(uint itemId, address buyer, uint amount);
 
+
+    // Assume these image URLs have been fetched off-chain.
+    // Replace the array values below with the URLs you obtained from Pixabay.
+    string[10] imageUrls = [
+        "https://th.bing.com/th/id/OIP.tKNQhH0mW7oF0wr0JLjFYwHaFE?w=222&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7",
+        "https://multiwood.com.pk/cdn/shop/products/Picsart_22-10-23_03-53-33-812_1000x1000.jpg?v=1666479726",
+        "https://www.swordsantiqueweapons.com/images/s2331b.jpg",
+        "https://www.hemswell-antiques.com/uploads/media/news/0001/95/thumb_94739_news_wide.jpeg",
+        "https://www.007.com/wp-content/uploads/2022/08/LCC-LS.jpg",
+        "https://unsplash.com/photos/brown-grains-on-selective-focus-photography-w-iVGVdZvt4",
+        "https://i.pcmag.com/imagery/lineupitems/06sRck1AimbfOxWwRYvEBqX.fit_lim.size_1050x578.v1569508748.jpg"
+    ];
+
     constructor() {
-        // Initialize items array with default values
-         addItem("Wheat", "https://www.reddit.com/r/TwinTowersInPhotos/comments/u9zusc/more_wheat_field_images_1982/", 1 ether, 5 ether, 180 minutes);
-         addItem("Ragi", "https://th.bing.com/th/id/OIP.tKNQhH0mW7oF0wr0JLjFYwHaFE?w=222&h=180&c=7&r=0&o=5&dpr=1.3&pid=1.7", 2 ether, 7 ether, 180 minutes);
-         addItem("Jowar", "https://multiwood.com.pk/cdn/shop/products/Picsart_22-10-23_03-53-33-812_1000x1000.jpg?v=1666479726", 3 ether, 10 ether, 180 minutes);
-         addItem("Maize", "https://www.swordsantiqueweapons.com/images/s2331b.jpg", 3 ether, 10 ether, 1 minutes);
-         addItem("Cocunut", "https://www.hemswell-antiques.com/uploads/media/news/0001/95/thumb_94739_news_wide.jpeg", 3 ether, 10 ether, 3 minutes);
-         addItem("Cotton", "https://www.007.com/wp-content/uploads/2022/08/LCC-LS.jpg", 3 ether, 10 ether, 5 minutes);
-         addItem("Paddy", "https://unsplash.com/photos/brown-grains-on-selective-focus-photography-w-iVGVdZvt4", 3 ether, 10 ether, 5 minutes);
-         addItem("Areca Nut", "https://i.pcmag.com/imagery/lineupitems/06sRck1AimbfOxWwRYvEBqX.fit_lim.size_1050x578.v1569508748.jpg", 3 ether, 10 ether, 5 minutes);
+        for (uint i = 0; i < 7; i++) {
+            items.push(
+                Item({
+                    id: i,
+                    seller: payable(msg.sender),
+                    name: string(abi.encodePacked("Item ", uintToString(i))),
+                    imageUrl: imageUrls[i],
+                    minBid: 1 ether * (i + 1),
+                    buyoutPrice: 5 ether * (i + 1),
+                    auctionEndTime: block.timestamp + (i + 1) * 1 days,
+                    highestBidder: address(0),
+                    highestBid: 0,
+                    ended: false
+                })
+            );
+        }
     }
 
+    // Helper function: converts uint to string
+    function uintToString(uint v) internal pure returns (string memory) {
+        if (v == 0) {
+            return "0";
+        }
+        uint j = v;
+        uint len;
+        while (j != 0) {
+            len++;
+            j /= 10;
+        }
+        bytes memory bstr = new bytes(len);
+        uint k = len;
+        while (v != 0) {
+            k = k - 1;
+            uint8 temp = uint8(48 + v % 10);
+            bstr[k] = bytes1(temp);
+            v /= 10;
+        }
+        return string(bstr);
+    }
     function registerUser(string memory _username) public {
         require(!registered[msg.sender], "User already registered.");
         users[msg.sender] = User(_username, msg.sender);
